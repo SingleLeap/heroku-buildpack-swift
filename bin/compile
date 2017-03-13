@@ -23,11 +23,15 @@ if [ -f "$ENV_DIR/SWIFT_BUILD_FLAGS" ]; then
   SWIFT_BUILD_FLAGS=`cat "$ENV_DIR/SWIFT_BUILD_FLAGS"`
 fi
 
+
+
 if [ -d "$CACHE_DIR" ]; then
-    echo "Cache Dir $CACHE_DIR"
-    ls $CACHE_DIR
-else
-    echo "No cache dir??"
+    if test -d "$CACHE_DIR/Packages" && (! test -f "$CACHE_DIR/clean_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"); then
+        echo "Using Package Build Cache"
+        cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
+    else
+        echo "Not using Package Build Cache, clean build requested"
+    fi
 fi
 
 mkdir -p "$CACHE_DIR"
@@ -48,5 +52,11 @@ set-env LD_LIBRARY_PATH '$HOME/.swift-lib'
 
 source "$BIN_DIR/steps/hooks/post_compile"
 
-echo "Build Dir $BUILD_DIR:"
-ls -l $BUILD_DIR
+if [ -d "$CACHE_DIR/Packages" ]; then
+    rm -fr "$CACHE_DIR/Packages"
+fi
+
+echo "Copying Packages to Build Cache"
+cp -r "$BUILD_DIR/Packages" "$CACHE_DIR"
+cp "$BUILD_DIR/cache_version" "$CACHE_DIR/cache_version"
+
