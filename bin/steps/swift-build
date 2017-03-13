@@ -1,3 +1,5 @@
 cd $BUILD_DIR
 puts-step "Building Package"
+echo "Build Flags: $SWIFT_BUILD_FLAGS, Configuration $SWIFT_BUILD_CONFIGURATION"
+ls -l ./Packages
 swift build $SWIFT_BUILD_FLAGS --configuration "$SWIFT_BUILD_CONFIGURATION"

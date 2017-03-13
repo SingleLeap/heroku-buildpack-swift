@@ -30,6 +30,7 @@ if [ -d "$CACHE_DIR" ]; then
         echo "-----> Using Package Build Cache"
         cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
         ls -l "$BUILD_DIR"
+        ls -l "$BUILD_DIR/Packages"
     else
         echo "Not using Package Build Cache."
     fi
