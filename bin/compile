@@ -30,7 +30,7 @@ if [ -d "$CACHE_DIR" ]; then
         echo "Using Package Build Cache"
         cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
     else
-        echo "Not using Package Build Cache, clean build requested"
+        echo "Not using Package Build Cache."
     fi
 fi
 
@@ -58,5 +58,7 @@ fi
 
 echo "Copying Packages to Build Cache"
 cp -r "$BUILD_DIR/Packages" "$CACHE_DIR"
-cp "$BUILD_DIR/cache_version" "$CACHE_DIR/cache_version"
+if test -f "$BUILD_DIR/cache_version"; then
+    cp "$BUILD_DIR/cache_version" "$CACHE_DIR/cache_version"
+fi
 
