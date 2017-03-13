@@ -27,8 +27,9 @@ fi
 
 if [ -d "$CACHE_DIR" ]; then
     if test -d "$CACHE_DIR/Packages" && (! test -f "$CACHE_DIR/clean_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"); then
-        echo "Using Package Build Cache"
+        echo "-----> Using Package Build Cache"
         cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
+        ls -l "$BUILD_DIR"
     else
         echo "Not using Package Build Cache."
     fi
@@ -52,11 +53,12 @@ set-env LD_LIBRARY_PATH '$HOME/.swift-lib'
 
 source "$BIN_DIR/steps/hooks/post_compile"
 
+echo "-----> Copying Packages to Build Cache"
+
 if [ -d "$CACHE_DIR/Packages" ]; then
     rm -fr "$CACHE_DIR/Packages"
 fi
 
-echo "Copying Packages to Build Cache"
 cp -r "$BUILD_DIR/Packages" "$CACHE_DIR"
 if test -f "$BUILD_DIR/cache_version"; then
     cp "$BUILD_DIR/cache_version" "$CACHE_DIR/cache_version"
