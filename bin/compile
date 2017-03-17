@@ -29,29 +29,34 @@ ls -ld "$BUILD_DIR"
 echo "CACHE_DIR:"
 ls -ld "$CACHE_DIR"
 
-if [ -d "$CACHE_DIR" ]; then
-    if test -d "$CACHE_DIR/Packages" && (! test -f "$CACHE_DIR/cache_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"); then
-        echo "-----> Using Package Build Cache"
-        if test -f "$CACHE_DIR/cache_version"; then
-            echo "cache version:"
-            cat "$CACHE_DIR/cache_version"
-            echo "build version:"
-            cat "$BUILD_DIR/cache_version"
-        else
-            echo "no cache_version in $CACHE_DIR"
-        fi
-        cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
-    else
-        echo "Not using Package Build Cache."
-            echo "cache version:"
-            cat "$CACHE_DIR/cache_version"
-            echo "build version:"
-            cat "$BUILD_DIR/cache_version"
+function use_package_cache() {
+    echo "-----> Using Package Cache: $1"
+    echo "cp -r \"$CACHE_DIR/Packages\" \"$BUILD_DIR\""
+    cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
+}
+
+function drop_package_cache() {
+    echo "-----> Dropping Package Cache: $1"
+    rm -fr "$CACHE_DIR/Packages"
+    if test -d "$BUILD_DIR/Packages"; then
+        echo "Deleting Packages in build dir to force reinstall"
         rm -fr "$BUILD_DIR/Packages"
     fi
-fi
+}
 
 mkdir -p "$CACHE_DIR"
+
+if test -d "$CACHE_DIR/Packages"; then
+    if test -f "$BUILD_DIR/cache_version"; then
+        if ! test -f "$CACHE_DIR/cache_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"; then
+            drop_package_cache "new cache_version found"
+        else
+            use_package_cache "cache_version match"
+        fi
+    else
+        use_package_cache "no cache_version yet"
+    fi
+fi
 
 source "$BIN_DIR/utils"
 source "$BIN_DIR/steps/swiftenv"
