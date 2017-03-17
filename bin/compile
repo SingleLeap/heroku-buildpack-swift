@@ -37,6 +37,8 @@ if [ -d "$CACHE_DIR" ]; then
             cat "$CACHE_DIR/cache_version"
             echo "build version:"
             cat "$BUILD_DIR/cache_version"
+        else
+            echo "no cache_version in $CACHE_DIR"
         fi
         cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
     else
