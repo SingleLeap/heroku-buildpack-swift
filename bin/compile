@@ -26,7 +26,7 @@ fi
 
 
 if [ -d "$CACHE_DIR" ]; then
-    if test -d "$CACHE_DIR/Packages" && (! test -f "$CACHE_DIR/clean_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"); then
+    if test -d "$CACHE_DIR/Packages" && (! test -f "$CACHE_DIR/cache_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"); then
         echo "-----> Using Package Build Cache"
         cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
         ls -l "$BUILD_DIR"
