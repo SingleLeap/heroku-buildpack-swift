@@ -24,6 +24,10 @@ if [ -f "$ENV_DIR/SWIFT_BUILD_FLAGS" ]; then
 fi
 
 
+echo "BUILD_DIR:"
+ls -ld "$BUILD_DIR"
+echo "CACHE_DIR:"
+ls -ld "$CACHE_DIR"
 
 if [ -d "$CACHE_DIR" ]; then
     if test -d "$CACHE_DIR/Packages" && (! test -f "$CACHE_DIR/cache_version" || ! cmp "$CACHE_DIR/cache_version" "$BUILD_DIR/cache_version"); then
@@ -33,6 +37,7 @@ if [ -d "$CACHE_DIR" ]; then
         ls -l "$BUILD_DIR/Packages"
     else
         echo "Not using Package Build Cache."
+        rm -fr "$BUILD_DIR/Packages"
     fi
 fi
 
