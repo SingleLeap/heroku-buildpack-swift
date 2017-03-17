@@ -39,10 +39,12 @@ if [ -d "$CACHE_DIR" ]; then
             cat "$BUILD_DIR/cache_version"
         fi
         cp -r "$CACHE_DIR/Packages" "$BUILD_DIR"
-        ls -l "$BUILD_DIR"
-        ls -l "$BUILD_DIR/Packages"
     else
         echo "Not using Package Build Cache."
+            echo "cache version:"
+            cat "$CACHE_DIR/cache_version"
+            echo "build version:"
+            cat "$BUILD_DIR/cache_version"
         rm -fr "$BUILD_DIR/Packages"
     fi
 fi
